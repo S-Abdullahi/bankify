@@ -8,6 +8,76 @@
     <title>Bankist</title>
 </head>
 <body>
+    <header>
+        <span class="greeting">Login to get started<span class="greeting-name"></span></span>
+        <img src="logo.png" alt="logo" class="logo">
+        <div class="input-form">
+            <input type="text" placeholder="user" class="input input-user">
+            <input type="text" placeholder="PIN" class="input input-pin">
+            <span class="arrow">&rarr;</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="dashboard">
+            <div class="dashboard-current-date-time">
+                <span class="dashboard-heading">Current balance</span>
+                <span class="dashboard-date-time">As of <span class="dashboard-date">12/15/2022</span>, <span class="dashboard-time">11:55pm</span></span>
+            </div>
+
+            <div class="dashboard-balance">
+                $21,720.00
+            </div>
+        </div>
+        <section class="transaction">
+            <div class="transaction-log">
+                <div class="transaction-unit">
+                    <div class="transaction-deposit transaction-status">1 Deposit</div>
+                    <div class="transaction-date">3 days ago</div>
+                    <div class="transaction-amount">-$5000.00</div>
+                </div>
+                <div class="transaction-unit">
+                    <div class="transaction-withdraw transaction-status">2 withdraw</div>
+                    <div class="transaction-date">12/12/2022</div>
+                    <div class="transaction-amount">$6000.00</div>
+                </div>
+               
+            </div>
+
+            <div class="transaction-type">
+                <div class="type transfer">
+                    <h3 class="type-title">Transfer money</h3>
+                    <form action="" class="form">
+                        <input type="text" id="tranfer" class="trasact-input">
+                        <input type="text" id="amount" class="trasact-input">
+                        <button class="transaction-send">&rarr;</button>
+                        <label for="transfer" class="transact-label">Transfer to</label>
+                        <label for="amount" class="transact-label">Amount</label>
+                    </form>
+                </div>
+
+                <div class="type loan">
+                    <h3 class="type-title">Request loan</h3>
+                    <form class="form form-loan">
+                        <input type="text" id="loan" class="trasact-input">
+                        <button class="transaction-send">&rarr;</button>
+                        <label for="loan" class="transact-label">Amount</label>
+                    </form>
+                </div>
+
+                <div class="type close-account">
+                    <h3 class="type-title">Close account</h3>
+                    <form action="" class="form">
+                        <input type="text" id="confirm-user" class="trasact-input">
+                        <input type="text" id="confirm-pin" class="trasact-input">
+                        <button class="transaction-send">&rarr;</button>
+                        <label for="confirm-user" class="transact-label">confirm user</label>
+                        <label for="confirm-pin" class="transact-label">Confirm PIN</label>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
     <script src="script.js"></script>
 </body>
 </html>
