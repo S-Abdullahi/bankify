@@ -9,7 +9,7 @@
 :root{
     --bg-color: #edf2f4;
     --text-gen: #adb5bd;
-    --text-secondary: #6c757d;
+    --text-secondary: #474c50;
     --deposit-color: #38b000;
     --withdraw-color: red;
 }
@@ -68,10 +68,11 @@ header{
 
 .dashboard-date-time{
     color: var(--text-gen);
+    font-size: 0.8rem;
 }
 
 .dashboard-balance{
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: var(--text-secondary);
 }
 
@@ -86,7 +87,6 @@ header{
 
 .transaction-log{
     width: 100%;
-    /* margin-right: 1rem; */
     background-color: white;
     height: 100%;
     border-top-left-radius: 5px;
@@ -99,21 +99,22 @@ header{
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    border-bottom: 1px solid var(--text-gen);
+    border-bottom: 0.5px solid #adb5bd57;
 }
 
 .transaction-date{
-    margin-left: -8rem;
+    margin-left: -13rem;
 }
 .transaction-status{
-    padding: 0.2rem 0.3rem;
+    padding: 0.2rem 0.5rem;
     border-radius: 5rem;
     color: white;
     text-transform: uppercase;
+    font-weight: 400;
 }
 
 .transaction-deposit{
-    background-color: var(--deposit-color);
+    background-image: linear-gradient(to bottom right, #9ef01a, #38b000);
 }
 
 .transaction-withdraw{
@@ -130,7 +131,6 @@ header{
     flex-direction: column;
 }
 .type{
-    background-color: orangered;
     margin-bottom: 1rem;
     height: 30%;
     padding: 2rem;
@@ -178,6 +178,7 @@ header{
 .transaction-send{
     border: 0;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .loan{
@@ -190,4 +191,50 @@ header{
 
 .close-account{
     background-image: linear-gradient(to bottom right, #ff5c8a, #ff0a54);
+}
+
+/* SUMMARY BELOW THE PAGE */
+.summary{
+    margin: 0 20%;
+    display: grid;
+    grid-template-columns: 60% 40%;
+}
+
+.summary-details{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+
+}
+
+.time-countdown{
+    display: flex;
+    justify-content: end;
+    align-items: flex-end;
+    font-size: 0.8rem;
+}
+
+.summary-value{
+    margin-left: -2.0rem;
+    font-size: 1.3rem;
+}
+
+.summary-text{
+    font-size: 0.7rem;
+}
+
+.time-reading{
+    font-weight: 600;
+}
+
+.sort-btn{
+    border: 0;
+}
+
+.summary-in, .summary-interest{
+    color: #38b000;
+}
+
+.summary-out{
+    color: red;
 }
