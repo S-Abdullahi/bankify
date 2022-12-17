@@ -32,10 +32,34 @@ const account1 = {
 const accounts = [account1, account2, account3, account4];
 
   //ELEMENT
+const labelGreeting = document.querySelector('.greeting')
 const labelBalance = document.querySelector('.dashboard-balance')
+const labelSumIn = document.querySelector('.summary-in')
+const labelSumOut = document.querySelector('.summary-out')
+const labelInterest = document.querySelector('.summary-interest')
 
 const transactionMovement = document.querySelector('.transaction-log')
+const inputUsername = document.querySelector('.input-user')
+const inputPin = document.querySelector('.input-pin')
+const appContainer = document.querySelector('.app-container')
 
+const btnLogin = document.querySelector('.arrow')
+
+//event listeners
+let currentCustomer
+btnLogin.addEventListener('click', (e)=>{
+    e.preventDefault();
+    currentCustomer = accounts.find((acc)=>acc.username === inputUsername.value)
+
+    if(currentCustomer.pin === Number(inputPin.value)){
+        appContainer.style.opacity = 1;
+        inputUsername.value = inputPin.value = ''
+
+        //login greeting
+        labelGreeting.textContent = `Good morning, ${currentCustomer.owner.split(' ')[0]}`
+    }
+    console.log(currentCustomer)
+})
 
 
   //FUNCIIONS
@@ -47,20 +71,39 @@ const transactionMovement = document.querySelector('.transaction-log')
         const html = `
         <div class="transaction-unit">
             <div class="transaction-${type} transaction-status">${index + 1} ${type}</div>
-            <div class="transaction-amount">${amount}</div>
+            <div class="transaction-amount">$${amount}</div>
         </div>`
         transactionMovement.insertAdjacentHTML('afterbegin',html)
     })    
 }
-
 displayTransaction(account1.movements)
 
 //diplay total balance
 const calcDisplayBalance = function(movements){
     const balance = movements.reduce((acc, mov)=>acc+mov,0)
-    labelBalance.textContent = `${balance} EUR`
+    labelBalance.textContent = `$${balance}`
 }
 calcDisplayBalance(account1.movements)
+
+//calculate and display balance summary
+const calcBalanceSummary = function(accounts){
+    labelSumIn.textContent = `0.00`
+    labelSumOut.textContent = `0.00`
+    labelInterest.textContent = `0.00`
+
+    //calculate income
+    const income = accounts.filter((acc)=>acc > 0).reduce((acc, cur)=>acc+cur,0)
+    labelSumIn.textContent = `$${income}`
+
+    //calcuate debit
+    const debit = accounts.filter((acc)=>acc <0).reduce((acc,cur)=>acc+cur,0)
+    labelSumOut.textContent = `$${Math.abs(debit)}`
+
+    //calculate interest
+    const interest = accounts.filter((dep)=>dep >0).map((dep)=>dep*1.2/100).filter((dep)=>dep>=1).reduce((acc,cur)=>acc+cur,0)
+    labelInterest.textContent = `$${interest}`
+}
+calcBalanceSummary(account1.movements)
 
 //create username for each account
 const createUsername = function(userAccounts){

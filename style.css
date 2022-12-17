@@ -76,6 +76,11 @@ header{
     color: var(--text-secondary);
 }
 
+/*****APP CONTAINER*** */
+.app-container{
+    opacity: 0;
+    transition: all ease 0.2ms;
+}
 /*******TRANSACTION*******/
 .transaction{
     display: grid;
