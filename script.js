@@ -42,29 +42,89 @@ const transactionMovement = document.querySelector('.transaction-log')
 const inputUsername = document.querySelector('.input-user')
 const inputPin = document.querySelector('.input-pin')
 const appContainer = document.querySelector('.app-container')
+const InputRecipient = document.querySelector('.recipient')
+const InputTransferAmount = document.querySelector('.transfer-amount')
+const inputUsernameClose = document.querySelector('.close-input-user')
+const inputPinClose = document.querySelector('.close-input-pin')
 
 const btnLogin = document.querySelector('.arrow')
+const btnTransfer = document.querySelector('.transfer-btn')
+const btnClose = document.querySelector('.close-btn')
+
+
+//update ui
+function updateUI(account){
+    //display balance
+    calcDisplayBalance(account)
+
+    //display movement
+    displayTransaction(account.movements)
+
+    //display summary
+    calcBalanceSummary(account)
+}
 
 //event listeners
+//login
 let currentCustomer
 btnLogin.addEventListener('click', (e)=>{
     e.preventDefault();
     currentCustomer = accounts.find((acc)=>acc.username === inputUsername.value)
 
-    if(currentCustomer.pin === Number(inputPin.value)){
+    if(currentCustomer?.pin === Number(inputPin.value)){
         appContainer.style.opacity = 1;
         inputUsername.value = inputPin.value = ''
 
         //login greeting
-        labelGreeting.textContent = `Good morning, ${currentCustomer.owner.split(' ')[0]}`
+        labelGreeting.textContent = `welcome back, ${currentCustomer.owner.split(' ')[0]}`
+        
+
+        //update ui
+        updateUI(currentCustomer)
     }
     console.log(currentCustomer)
 })
 
 
+//transfer
+btnTransfer.addEventListener('click', (e)=>{
+    e.preventDefault()
+    const recipientUsername = InputRecipient.value
+    const amount = Number(InputTransferAmount.value)
+
+    const recipient = accounts.find((acc)=>acc.username === recipientUsername)
+
+    if(recipient && amount > 0 && recipientUsername !== currentCustomer.username && currentCustomer.balance >= amount){
+        recipient.movements.push(amount)
+        currentCustomer.movements.push(-amount)
+
+        InputRecipient.value = InputTransferAmount.value = ''
+        
+        //update ui
+        updateUI(currentCustomer)
+    }
+})
+
+//close account
+btnClose.addEventListener('click',(e)=>{
+    e.preventDefault()
+    const confirmUser = inputUsernameClose.value
+    const confirmPin = Number(inputPinClose.value)
+
+    if(currentCustomer.username === confirmUser && currentCustomer.pin === confirmPin){
+        const acctIndex = accounts.findIndex((acc)=>acc.username===confirmUser)
+
+        //clear input field
+        inputPinClose.value = inputUsernameClose.value = ''
+        accounts.splice(acctIndex,1)
+        
+        appContainer.style.opacity = 0;
+    }
+})
+
   //FUNCIIONS
   //display each transaction
-  const displayTransaction = function(transactions){
+  function displayTransaction(transactions){
     transactionMovement.innerHTML = ''
     transactions.forEach(function(amount, index){
         const type = amount > 0 ? 'deposit' : 'withdraw'
@@ -76,34 +136,34 @@ btnLogin.addEventListener('click', (e)=>{
         transactionMovement.insertAdjacentHTML('afterbegin',html)
     })    
 }
-displayTransaction(account1.movements)
+// displayTransaction(account1.movements)
 
 //diplay total balance
-const calcDisplayBalance = function(movements){
-    const balance = movements.reduce((acc, mov)=>acc+mov,0)
-    labelBalance.textContent = `$${balance}`
+function calcDisplayBalance(account){
+    account.balance = account.movements.reduce((acc, mov)=>acc+mov,0)
+    labelBalance.textContent = `$${account.balance}`
 }
-calcDisplayBalance(account1.movements)
+// calcDisplayBalance(account1.movements)
 
 //calculate and display balance summary
-const calcBalanceSummary = function(accounts){
+function calcBalanceSummary(account){
     labelSumIn.textContent = `0.00`
     labelSumOut.textContent = `0.00`
     labelInterest.textContent = `0.00`
 
     //calculate income
-    const income = accounts.filter((acc)=>acc > 0).reduce((acc, cur)=>acc+cur,0)
+    const income = account.movements.filter((acc)=>acc > 0).reduce((acc, cur)=>acc+cur,0)
     labelSumIn.textContent = `$${income}`
 
     //calcuate debit
-    const debit = accounts.filter((acc)=>acc <0).reduce((acc,cur)=>acc+cur,0)
+    const debit = account.movements.filter((acc)=>acc <0).reduce((acc,cur)=>acc+cur,0)
     labelSumOut.textContent = `$${Math.abs(debit)}`
 
     //calculate interest
-    const interest = accounts.filter((dep)=>dep >0).map((dep)=>dep*1.2/100).filter((dep)=>dep>=1).reduce((acc,cur)=>acc+cur,0)
+    const interest = account.movements.filter((dep)=>dep >0).map((dep)=>dep*account.interestRate/100).filter((dep)=>dep>=1).reduce((acc,cur)=>acc+cur,0)
     labelInterest.textContent = `$${interest}`
 }
-calcBalanceSummary(account1.movements)
+// calcBalanceSummary(account1.movements)
 
 //create username for each account
 const createUsername = function(userAccounts){
