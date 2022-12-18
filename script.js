@@ -200,13 +200,14 @@ const createUsername = function(userAccounts){
 createUsername(accounts)
 console.log(accounts)
 
-document.querySelector('.dashboard-balance').addEventListener('click',()=>{
-    const tranUI = Array.from(document.querySelectorAll('.transaction-amount'))//.map((el)=>el.textContent.replace('$',''))
+//Array.from() practice
+// document.querySelector('.dashboard-balance').addEventListener('click',()=>{
+//     const tranUI = Array.from(document.querySelectorAll('.transaction-amount'))//.map((el)=>el.textContent.replace('$',''))
 
-    const pracUI = document.querySelectorAll('.transaction-amount')
-    const pracUIArray = [...pracUI]
-    console.log(tranUI)
-    console.log(pracUIArray.map((el)=>el.textContent.replace('$','')))
-})
+//     const pracUI = document.querySelectorAll('.transaction-amount')
+//     const pracUIArray = [...pracUI]
+//     console.log(tranUI)
+//     console.log(pracUIArray.map((el)=>el.textContent.replace('$',)))
+// })
 
   
