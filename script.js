@@ -139,16 +139,17 @@ btnClose.addEventListener('click',(e)=>{
 })
 
 //sort
+let switchKey = false
 btnSort.addEventListener('click', ()=>{
-    console.log('we are outside')
-    displayTransaction(currentCustomer.movements, true)
+    displayTransaction(currentCustomer.movements, !switchKey)
+    switchKey = !switchKey
 })
 
   //FUNCIIONS
   //display each transaction
   function displayTransaction(transactions, sort=false){
-    const transactionSort = transactions.sort((a,b)=> a-b)
-    const trans = sort === true ? transactionSort : transactions
+    const transactionSort = transactions.slice().sort((a,b)=> a-b)
+    const trans = sort ? transactionSort : transactions
     transactionMovement.innerHTML = ''
     trans.forEach(function(amount, index){
         const type = amount > 0 ? 'deposit' : 'withdraw'
@@ -198,4 +199,14 @@ const createUsername = function(userAccounts){
 
 createUsername(accounts)
 console.log(accounts)
+
+document.querySelector('.dashboard-balance').addEventListener('click',()=>{
+    const tranUI = Array.from(document.querySelectorAll('.transaction-amount'))//.map((el)=>el.textContent.replace('$',''))
+
+    const pracUI = document.querySelectorAll('.transaction-amount')
+    const pracUIArray = [...pracUI]
+    console.log(tranUI)
+    console.log(pracUIArray.map((el)=>el.textContent.replace('$','')))
+})
+
   
