@@ -46,10 +46,13 @@ const InputRecipient = document.querySelector('.recipient')
 const InputTransferAmount = document.querySelector('.transfer-amount')
 const inputUsernameClose = document.querySelector('.close-input-user')
 const inputPinClose = document.querySelector('.close-input-pin')
+const inputLoanAmount = document.querySelector('.loan-amount')
 
 const btnLogin = document.querySelector('.arrow')
 const btnTransfer = document.querySelector('.transfer-btn')
+const btnLoan = document.querySelector('.loan-btn')
 const btnClose = document.querySelector('.close-btn')
+const btnSort = document.querySelector('.sort-btn')
 
 
 //update ui
@@ -105,6 +108,19 @@ btnTransfer.addEventListener('click', (e)=>{
     }
 })
 
+//loan
+btnLoan.addEventListener('click', (e)=>{
+    e.preventDefault()
+    const inputLoan = Number(inputLoanAmount.value)
+    const depositStatus = currentCustomer.movements.some((dep)=>dep > 0.1 * inputLoan)
+    if(inputLoan > 0 &&  depositStatus){
+        currentCustomer.movements.push(inputLoan)
+        //update ui
+        updateUI(currentCustomer)
+    }
+    inputLoanAmount.value = ''
+})
+
 //close account
 btnClose.addEventListener('click',(e)=>{
     e.preventDefault()
@@ -122,11 +138,19 @@ btnClose.addEventListener('click',(e)=>{
     }
 })
 
+//sort
+btnSort.addEventListener('click', ()=>{
+    console.log('we are outside')
+    displayTransaction(currentCustomer.movements, true)
+})
+
   //FUNCIIONS
   //display each transaction
-  function displayTransaction(transactions){
+  function displayTransaction(transactions, sort=false){
+    const transactionSort = transactions.sort((a,b)=> a-b)
+    const trans = sort === true ? transactionSort : transactions
     transactionMovement.innerHTML = ''
-    transactions.forEach(function(amount, index){
+    trans.forEach(function(amount, index){
         const type = amount > 0 ? 'deposit' : 'withdraw'
         const html = `
         <div class="transaction-unit">
