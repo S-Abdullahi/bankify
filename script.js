@@ -93,7 +93,7 @@ function formatNumber(value, locale, currency){
 
 //timer
 const setTimer = function(){
-    let time = 10
+    let time = 100
     const tick = function(){
         let hour = String(Math.trunc(time/60)).padStart(2,0)
         let minute = String(time % 60).padStart(2,0)
@@ -188,13 +188,16 @@ btnLoan.addEventListener('click', (e)=>{
     const depositStatus = currentCustomer.movements.some((dep)=>dep > 0.1 * inputLoan)
     const now = new Date()
     if(inputLoan > 0 &&  depositStatus){
-        currentCustomer.movements.push(inputLoan)
-        currentCustomer.movementsDates.push(now.toISOString())
-        //update ui
-        updateUI(currentCustomer)
-
-        clearInterval(timer)
-        timer = setTimer()
+        setTimeout(() => {
+            currentCustomer.movements.push(inputLoan)
+            currentCustomer.movementsDates.push(now.toISOString())
+            //update ui
+            updateUI(currentCustomer)
+    
+            clearInterval(timer)
+            timer = setTimer()
+    
+        }, 2500);
     }
     inputLoanAmount.value = ''
 })
