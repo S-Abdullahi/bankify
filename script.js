@@ -93,7 +93,7 @@ function formatNumber(value, locale, currency){
 
 //timer
 const setTimer = function(){
-    let time = 100
+    let time = 1000
     const tick = function(){
         let hour = String(Math.trunc(time/60)).padStart(2,0)
         let minute = String(time % 60).padStart(2,0)
