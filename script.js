@@ -33,9 +33,9 @@ const account1 = {
       '2019-12-25T06:04:23.907Z',
       '2020-01-25T14:18:46.235Z',
       '2020-02-05T16:33:06.386Z',
-      '2020-04-10T14:43:26.374Z',
-      '2020-06-25T18:49:59.371Z',
-      '2020-07-26T12:01:20.894Z',
+      '2022-12-19T14:43:26.374Z',
+      '2022-12-18T18:49:59.371Z',
+      '2022-12-20T12:01:20.894Z',
     ],
     currency: 'USD',
     locale: 'en-US',
@@ -51,6 +51,7 @@ const labelBalance = document.querySelector('.dashboard-balance')
 const labelSumIn = document.querySelector('.summary-in')
 const labelSumOut = document.querySelector('.summary-out')
 const labelInterest = document.querySelector('.summary-interest')
+const labelTime = document.querySelector('.time-reading')
 
 const transactionMovement = document.querySelector('.transaction-log')
 const inputUsername = document.querySelector('.input-user')
@@ -80,22 +81,63 @@ function updateUI(account){
     //display summary
     calcBalanceSummary(account)
 }
+console.log(new Date().getTime())
+//number formatting
+function formatNumber(value, locale, currency){
+    return Intl.NumberFormat(locale,{
+        style: 'currency',
+        currency: currency
+    }).format(value)
+}
+
+
+//timer
+const setTimer = function(){
+    let time = 10
+    const tick = function(){
+        let hour = String(Math.trunc(time/60)).padStart(2,0)
+        let minute = String(time % 60).padStart(2,0)
+        labelTime.textContent = `${hour} : ${minute}`
+
+        if(time == 0){
+            appContainer.style.opacity = 0;
+            labelGreeting.textContent = 'Login to get started'
+            clearInterval(timeInterval)
+        }
+        time--
+    }
+    
+    tick()
+    const timeInterval = setInterval(tick,1000)
+    return timeInterval
+}
+
+//date formating
+function formatDate(date,locale){
+        const change = Math.abs(Math.round((new Date(date).getTime() - new Date().getTime())/ (1000*60*60*24)));
+        if (change == 0) return 'Today'
+        if (change == 1) return 'Yesterday'
+        if (change == 2) return '2 days ago'
+        if (change == 3) return '3 days ago'
+
+        return Intl.DateTimeFormat(locale).format(date)
+}
 
 //event listeners
 //login
-let currentCustomer
+let currentCustomer, timer
 btnLogin.addEventListener('click', (e)=>{
     e.preventDefault();
 
     const loginTime = new Date()
-    const date = `${loginTime.getDate()}`.padStart(2,0)
-    const month = `${loginTime.getMonth()}`.padStart(2,0)
-    const year = loginTime.getFullYear()
-    const hour = `${loginTime.getHours()}`.padStart(2,0)
-    const minute = `${loginTime.getMinutes()}`.padStart(2,0)
+    const option = {
+        hour: 'numeric',
+        minute: 'numeric'
+    }
+    const lang = navigation.language
 
-    labelDashDate.textContent = `${date}/${month}/${year}`
-    labelDashTime.textContent = `${hour}:${minute}`
+    labelDashDate.textContent = new Intl.DateTimeFormat(lang).format(loginTime)
+    labelDashTime.textContent = new Intl.DateTimeFormat(lang,option).format(loginTime)
     currentCustomer = accounts.find((acc)=>acc.username === inputUsername.value)
 
     if(currentCustomer?.pin === Number(inputPin.value)){
@@ -107,9 +149,11 @@ btnLogin.addEventListener('click', (e)=>{
         
 
         //update ui
+        if(timer) clearInterval(timer)
+        timer = setTimer()
         updateUI(currentCustomer)
+
     }
-    console.log(currentCustomer)
 })
 
 
@@ -118,7 +162,7 @@ btnTransfer.addEventListener('click', (e)=>{
     e.preventDefault()
     const recipientUsername = InputRecipient.value
     const amount = Number(InputTransferAmount.value)
-
+    const now = new Date()
     const recipient = accounts.find((acc)=>acc.username === recipientUsername)
 
     if(recipient && amount > 0 && recipientUsername !== currentCustomer.username && currentCustomer.balance >= amount){
@@ -126,9 +170,14 @@ btnTransfer.addEventListener('click', (e)=>{
         currentCustomer.movements.push(-amount)
 
         InputRecipient.value = InputTransferAmount.value = ''
-        
+        recipient.movementsDates.push(now.toISOString())
+        currentCustomer.movementsDates.push(now.toISOString())
         //update ui
         updateUI(currentCustomer)
+
+        //reset timer
+        clearInterval(timer)
+        timer = setTimer()
     }
 })
 
@@ -137,10 +186,15 @@ btnLoan.addEventListener('click', (e)=>{
     e.preventDefault()
     const inputLoan = Math.floor(inputLoanAmount.value)
     const depositStatus = currentCustomer.movements.some((dep)=>dep > 0.1 * inputLoan)
+    const now = new Date()
     if(inputLoan > 0 &&  depositStatus){
         currentCustomer.movements.push(inputLoan)
+        currentCustomer.movementsDates.push(now.toISOString())
         //update ui
         updateUI(currentCustomer)
+
+        clearInterval(timer)
+        timer = setTimer()
     }
     inputLoanAmount.value = ''
 })
@@ -182,25 +236,23 @@ btnSort.addEventListener('click', ()=>{
         const month = `${transTime.getMonth()}`.padStart(2,0)
         const day = `${transTime.getDate()}`.padStart(2,0)
 
-        const displayTime = `${year}/${month}/${day}`
+        const displayTime = `${day}/${month}/${year}`
 
         const html = `
         <div class="transaction-unit">
             <div class="transaction-${type} transaction-status">${index + 1} ${type}</div>
-            <div class="transaction-date">${displayTime}</div>
-            <div class="transaction-amount">$${amount.toFixed(2)}</div>
+            <div class="transaction-date">${formatDate(transTime.getTime(),acc.locale)}</div>
+            <div class="transaction-amount">${formatNumber(amount.toFixed(2),acc.locale,acc.currency)}</div>
         </div>`
         transactionMovement.insertAdjacentHTML('afterbegin',html)
     })    
 }
-// displayTransaction(account1.movements)
 
 //diplay total balance
 function calcDisplayBalance(account){
     account.balance = account.movements.reduce((acc, mov)=>acc+mov,0)
-    labelBalance.textContent = `$${account.balance.toFixed(2)}`
+    labelBalance.textContent = `${formatNumber(account.balance.toFixed(2),account.locale, account.currency)}`
 }
-// calcDisplayBalance(account1.movements)
 
 //calculate and display balance summary
 function calcBalanceSummary(account){
@@ -210,17 +262,16 @@ function calcBalanceSummary(account){
 
     //calculate income
     const income = account.movements.filter((acc)=>acc > 0).reduce((acc, cur)=>acc+cur,0)
-    labelSumIn.textContent = `$${income.toFixed(2)}`
+    labelSumIn.textContent = formatNumber(income.toFixed(2),account.locale,account.currency)
 
     //calcuate debit
     const debit = account.movements.filter((acc)=>acc <0).reduce((acc,cur)=>acc+cur,0)
-    labelSumOut.textContent = `$${Math.abs(debit).toFixed(2)}`
+    labelSumOut.textContent = formatNumber(Math.abs(debit).toFixed(2),account.locale, account.currency) 
 
     //calculate interest
     const interest = account.movements.filter((dep)=>dep >0).map((dep)=>dep*account.interestRate/100).filter((dep)=>dep>=1).reduce((acc,cur)=>acc+cur,0)
-    labelInterest.textContent = `$${interest.toFixed(2)}`
+    labelInterest.textContent = formatNumber(interest.toFixed(2), account.locale, account.currency)
 }
-// calcBalanceSummary(account1.movements)
 
 //create username for each account
 const createUsername = function(userAccounts){
