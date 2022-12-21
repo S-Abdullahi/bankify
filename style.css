@@ -244,10 +244,30 @@ header{
     color: red;
 }
 
+footer{
+    color: gray;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+footer a{
+    color: gray;
+    text-decoration: none;
+}
 /* MEDIA QUERY */
 @media screen and (max-width:1200px){
     .transaction, .dashboard, .summary{
         margin: 2rem 2%;
+    }
+
+    .summary-details{
+        margin-top: 2rem;
+    }
+}
+
+@media screen and (max-width:950px){
+    .summary-value{
+        margin-left: -5%;
     }
 }
 
@@ -255,12 +275,31 @@ header{
     .transaction-date{
         margin-left: -9rem;
     }
+
+    .summary-value{
+        /* margin-left: -5%; */
+        font-size: 1rem;
+    }
+
+    .summary-text{
+        font-size: 0.6rem;
+    }
 }
 
 @media screen and (max-width:700px){
     .transaction-date{
         margin-left: -4rem;
     }
+
+    .greeting{
+        font-size: 1rem;
+    }
+
+    .logo{
+        height: 1.4rem;
+        width: 1.4rem;
+    }
+    
 }
 
 @media screen and (max-width:600px){
@@ -272,8 +311,100 @@ header{
         font-size: 0.5rem;
     }
 
+    .transact-label{
+        font-size: 0.5rem;
+    }
+
+    .type{
+        padding: 2rem 1rem;
+    }
+
     .dashboard-balance{
         font-size:1.5rem;
         margin-right: 1rem ;
+    }
+
+    .summary-value{
+        /* margin-left: 0; */
+        font-size: 0.8rem;
+    }
+
+    .summary-text{
+        font-size: 0.5rem;
+        font-weight: 600;
+    }
+
+    .sort-btn{
+        font-size: 0.6rem;
+    }
+
+    .time-countdown{
+        font-size: 0.6rem;
+    }
+
+    .greeting{
+        font-size: 0.8rem;
+    }
+
+    .input{
+        width: 30%;
+    }
+}
+
+@media screen and (max-width:550px){
+
+    body{
+        overflow-x: auto;
+    }
+    header{
+        display: grid;
+        grid-template-columns: 2.5fr 1fr;
+        gap: 1rem;
+    }
+
+    .app-container{
+        position: relative;
+    }
+
+    .transaction{
+        display: grid;
+        grid-template-columns: 100%;
+        height: 100%;
+        margin-top: 6rem;
+    }
+
+    .transaction-amount, .dashboard-heading, .dashboard-balance{
+        font-size: 0.8rem;
+    }
+
+    .dashboard-date-time{
+        font-size: 80%;
+    }
+    .summary{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 1rem;
+        left: 0;
+        /* margin-right: 5rem; */
+    }
+
+    .summary-details{
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .summary-value{
+        /* margin-left: -2rem; */
+        font-size: 0.8rem;
+    }
+
+    .time-countdown{
+        margin-right: 2rem;
+        margin-top: 0.5rem;
+        /* padding: 1rem; */
+        /* margin-bottom: 2rem; */
     }
 }
